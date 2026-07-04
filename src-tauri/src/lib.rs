@@ -1,4 +1,5 @@
 mod adb;
+mod files;
 mod scrcpy;
 mod settings;
 
@@ -67,10 +68,30 @@ fn save_settings(app: AppHandle, settings: settings::Settings) -> Result<(), Str
     settings::save(&app, &settings)
 }
 
+#[tauri::command]
+fn fs_list(serial: String, path: String) -> Result<Vec<files::FsEntry>, String> {
+    files::list(&serial, &path)
+}
+
+#[tauri::command]
+fn fs_push(
+    serial: String,
+    local_paths: Vec<String>,
+    remote_dir: String,
+) -> Vec<files::PushResult> {
+    files::push(&serial, local_paths, &remote_dir)
+}
+
+#[tauri::command]
+fn fs_pull(serial: String, remote_path: String) -> Result<String, String> {
+    files::pull(&serial, &remote_path)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_dialog::init())
         .manage(Sessions::default())
         .setup(|app| {
             adb::spawn_tracker(app.handle().clone());
@@ -88,6 +109,9 @@ pub fn run() {
             list_sessions,
             get_settings,
             save_settings,
+            fs_list,
+            fs_push,
+            fs_pull,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

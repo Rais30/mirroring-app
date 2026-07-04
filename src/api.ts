@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { Device, SessionInfo, Settings } from "./types";
+import type { Device, FsEntry, PushResult, SessionInfo, Settings } from "./types";
 
 export const listDevices = () => invoke<Device[]>("list_devices");
 
@@ -29,3 +29,12 @@ export const getSettings = () => invoke<Settings>("get_settings");
 
 export const saveSettings = (settings: Settings) =>
   invoke<void>("save_settings", { settings });
+
+export const fsList = (serial: string, path: string) =>
+  invoke<FsEntry[]>("fs_list", { serial, path });
+
+export const fsPush = (serial: string, localPaths: string[], remoteDir: string) =>
+  invoke<PushResult[]>("fs_push", { serial, localPaths, remoteDir });
+
+export const fsPull = (serial: string, remotePath: string) =>
+  invoke<string>("fs_pull", { serial, remotePath });

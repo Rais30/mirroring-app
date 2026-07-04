@@ -21,6 +21,18 @@ export interface Settings {
   alwaysOnTop: boolean;
 }
 
+export interface FsEntry {
+  name: string;
+  isDir: boolean;
+  size: number;
+}
+
+export interface PushResult {
+  file: string;
+  ok: boolean;
+  message: string;
+}
+
 export interface SessionEnded {
   id: string;
   ok: boolean;

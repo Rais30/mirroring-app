@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DeviceCard from "./components/DeviceCard";
+import FileTab from "./components/FileTab";
 import PairDialog from "./components/PairDialog";
 import SessionBar from "./components/SessionBar";
 import SettingsPanel from "./components/SettingsPanel";
@@ -9,7 +10,7 @@ import "./App.css";
 export default function App() {
   const { devices, sessions, error, setError, refresh } = useDevices();
   const [showPair, setShowPair] = useState(false);
-  const [tab, setTab] = useState<"devices" | "settings">("devices");
+  const [tab, setTab] = useState<"devices" | "files" | "settings">("devices");
 
   return (
     <main className="app">
@@ -19,6 +20,10 @@ export default function App() {
           <button className={tab === "devices" ? "tab active" : "tab"}
             onClick={() => setTab("devices")}>
             Perangkat
+          </button>
+          <button className={tab === "files" ? "tab active" : "tab"}
+            onClick={() => setTab("files")}>
+            File
           </button>
           <button className={tab === "settings" ? "tab active" : "tab"}
             onClick={() => setTab("settings")}>
@@ -63,6 +68,10 @@ export default function App() {
               ))}
             </div>
           )}
+        </section>
+      ) : tab === "files" ? (
+        <section className="content">
+          <FileTab devices={devices} onError={setError} />
         </section>
       ) : (
         <section className="content">

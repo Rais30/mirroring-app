@@ -9,6 +9,7 @@ Aplikasi macOS untuk mirroring HP Android ke MacBook. Dibangun dengan **Tauri 2 
 - **Wireless (WiFi)** — pairing Android 11+ dengan kode, atau tombol "Aktifkan WiFi" dari koneksi USB lalu cabut kabel
 - **Rekam layar** — MP4 ke `~/Movies/Mirrorring/`
 - **Screenshot** — PNG ke `~/Pictures/Mirrorring/`
+- **Transfer file** — kirim dokumen ke HP (file picker atau drag & drop → `/sdcard/Download`), browse isi penyimpanan HP dan ambil file ke `~/Downloads` Mac
 - **Pengaturan tersimpan** — bitrate, resolusi maksimal, audio, stay-awake, matikan layar HP saat mirror, always-on-top
 - Deteksi device real-time (`adb track-devices`), petunjuk bila device `unauthorized`/offline
 
@@ -51,6 +52,8 @@ Hasil:
 | Wireless tanpa kabel | **+ Sambungkan via WiFi** → ikuti langkah pairing (Wireless debugging di HP) |
 | Rekam | Klik **Rekam** → sesi scrcpy dengan `--record` → **Stop Rekam** menyimpan MP4 |
 | Screenshot | Klik **Screenshot** → PNG tersimpan otomatis |
+| Kirim file ke HP | Tab **File** → **⬆ Kirim File ke HP** (atau drag & drop ke jendela) → masuk `/sdcard/Download` |
+| Ambil file dari HP | Tab **File** → navigasi folder → **⬇ Ambil** → tersimpan di `~/Downloads` |
 
 ## Arsitektur
 
@@ -61,6 +64,7 @@ src/                  React frontend (UI bahasa Indonesia, tema gelap)
   components/         DeviceCard, PairDialog, SettingsPanel, SessionBar
 src-tauri/src/
   adb.rs              deteksi device, pairing WiFi, screenshot, tracker
+  files.rs            transfer file (adb push/pull, listing /sdcard)
   scrcpy.rs           kelola sesi mirror/record (SIGTERM agar MP4 ter-finalize)
   settings.rs         persist pengaturan (JSON di app config dir)
   lib.rs              registrasi Tauri commands
